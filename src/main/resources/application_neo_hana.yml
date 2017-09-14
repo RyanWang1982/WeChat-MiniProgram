@@ -1,0 +1,16 @@
+# Spring
+spring:
+  application:
+    name: SSO_Test
+  datasource:
+    jndi-name: java:comp/env/jdbc/NEO_HANA
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HANAColumnStoreDialect
+  thymeleaf:
+    cache: false
