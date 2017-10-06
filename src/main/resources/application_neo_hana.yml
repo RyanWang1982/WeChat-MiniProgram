@@ -1,7 +1,7 @@
 # Spring
 spring:
   application:
-    name: SSO_Test
+    name: MiniProgram
   datasource:
     jndi-name: java:comp/env/jdbc/NEO_HANA
   jpa:

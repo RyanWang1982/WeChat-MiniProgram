@@ -1,13 +1,10 @@
-package wang.yongrui.wechat.miniprogram;
-
-import static wang.yongrui.wechat.constant.SystemConstant.*;
+package wang.yongrui.wechat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import springfox.documentation.builders.PathSelectors;
@@ -16,9 +13,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication(scanBasePackages = { SYSTEM_PACKAGE })
+@SpringBootApplication
 @EnableJpaAuditing
-@Configuration
 @EnableSwagger2
 public class WeChatMiniProgramApplication extends SpringBootServletInitializer {
 
@@ -37,7 +33,7 @@ public class WeChatMiniProgramApplication extends SpringBootServletInitializer {
 	@Bean
 	public Docket swaggerAPI() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage(SYSTEM_PACKAGE)).paths(PathSelectors.any()).build();
+				.apis(RequestHandlerSelectors.basePackage("wang.yongrui")).paths(PathSelectors.any()).build();
 	}
 
 }
