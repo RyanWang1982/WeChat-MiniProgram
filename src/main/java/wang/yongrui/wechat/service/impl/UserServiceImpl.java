@@ -20,10 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import wang.yongrui.wechat.entity.jpa.ActionEntity_;
-import wang.yongrui.wechat.entity.jpa.ExecutedActionEntity_;
-import wang.yongrui.wechat.entity.jpa.ExecutedPartEntity_;
+import wang.yongrui.wechat.entity.jpa.CircleDayEntity_;
+import wang.yongrui.wechat.entity.jpa.ExerciseEntity_;
 import wang.yongrui.wechat.entity.jpa.ExtendedInfoEntity;
-import wang.yongrui.wechat.entity.jpa.PartEntity_;
 import wang.yongrui.wechat.entity.jpa.PlanEntity_;
 import wang.yongrui.wechat.entity.jpa.RealityEntity_;
 import wang.yongrui.wechat.entity.jpa.RoleEntity;
@@ -118,9 +117,15 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = userRepository.findOne((root, criteriaQuery, criteriaBuilder) -> {
 			criteriaQuery.distinct(true);
 			if (Long.class != criteriaQuery.getResultType()) {
-				root.fetch(UserEntity_.planEntitySet, JoinType.LEFT).fetch(PlanEntity_.partEntitySet, JoinType.LEFT)
-						.fetch(PartEntity_.actionEntitySet, JoinType.LEFT)
-						.fetch(ActionEntity_.groupEntitySet, JoinType.LEFT);
+				root.fetch(UserEntity_.planEntitySet, JoinType.LEFT)
+						.fetch(PlanEntity_.circleDayEntitySet, JoinType.LEFT)
+						.fetch(CircleDayEntity_.exerciseEntitySet, JoinType.LEFT)
+						.fetch(ExerciseEntity_.actionEntity, JoinType.LEFT)
+						.fetch(ActionEntity_.partEntitySet, JoinType.LEFT);
+				root.fetch(UserEntity_.planEntitySet, JoinType.LEFT)
+						.fetch(PlanEntity_.circleDayEntitySet, JoinType.LEFT)
+						.fetch(CircleDayEntity_.exerciseEntitySet, JoinType.LEFT)
+						.fetch(ExerciseEntity_.groupEntitySet, JoinType.LEFT);
 			}
 			return criteriaBuilder.equal(root.get(UserEntity_.id), id);
 		});
@@ -141,9 +146,12 @@ public class UserServiceImpl implements UserService {
 			criteriaQuery.distinct(true);
 			if (Long.class != criteriaQuery.getResultType()) {
 				root.fetch(UserEntity_.realityEntitySet, JoinType.LEFT)
-						.fetch(RealityEntity_.executedPartEntitySet, JoinType.LEFT)
-						.fetch(ExecutedPartEntity_.executedActionEntitySet, JoinType.LEFT)
-						.fetch(ExecutedActionEntity_.executedGroupEntitySet, JoinType.LEFT);
+						.fetch(RealityEntity_.exerciseEntitySet, JoinType.LEFT)
+						.fetch(ExerciseEntity_.actionEntity, JoinType.LEFT)
+						.fetch(ActionEntity_.partEntitySet, JoinType.LEFT);
+				root.fetch(UserEntity_.realityEntitySet, JoinType.LEFT)
+						.fetch(RealityEntity_.exerciseEntitySet, JoinType.LEFT)
+						.fetch(ExerciseEntity_.groupEntitySet, JoinType.LEFT);
 			}
 			return criteriaBuilder.equal(root.get(UserEntity_.id), id);
 		});

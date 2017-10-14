@@ -25,8 +25,8 @@ import wang.yongrui.wechat.entity.basic.PlanBasic;
 public class PlanEntity extends PlanBasic {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "PLAN_PART", joinColumns = { @JoinColumn(name = "plan_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "part_id") })
-	private Set<PartEntity> partEntitySet;
+	@JoinTable(name = "PLAN_CIRCLE_DAY", joinColumns = { @JoinColumn(name = "plan_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "circle_day_id") })
+	private Set<CircleDayEntity> circleDayEntitySet;
 
 }

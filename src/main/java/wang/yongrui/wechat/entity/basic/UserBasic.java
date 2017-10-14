@@ -33,7 +33,7 @@ public class UserBasic extends AuditingEntity {
 	@GeneratedValue
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String loginName;
 
 	@Column(unique = true)
@@ -44,28 +44,28 @@ public class UserBasic extends AuditingEntity {
 
 	private String nickName;
 
-	@Column(nullable = false)
 	private String firstName;
 
-	@Column(nullable = false)
 	private String lastName;
 
 	@Column(unique = true)
 	private String mobileNumber;
 
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String email;
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 
+	@Column(nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar dateOfBirth;
 
 	@Column(unique = true)
 	private String avatarUrl;
 
+	@Column(nullable = true)
 	@Enumerated(value = EnumType.STRING)
 	private Grade grade;
 

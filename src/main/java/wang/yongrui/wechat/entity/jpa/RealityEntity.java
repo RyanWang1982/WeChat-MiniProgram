@@ -25,8 +25,8 @@ import wang.yongrui.wechat.entity.basic.RealityBasic;
 public class RealityEntity extends RealityBasic {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "REALITY_EXECUTED_PART", joinColumns = {
-			@JoinColumn(name = "reality_id") }, inverseJoinColumns = { @JoinColumn(name = "executed_part_id") })
-	private Set<ExecutedPartEntity> executedPartEntitySet;
+	@JoinTable(name = "REALITY_EXERCISE", joinColumns = { @JoinColumn(name = "reality_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "exercise_id") })
+	private Set<ExerciseEntity> exerciseEntitySet;
 
 }

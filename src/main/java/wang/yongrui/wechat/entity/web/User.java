@@ -3,9 +3,10 @@
  */
 package wang.yongrui.wechat.entity.web;
 
+import static wang.yongrui.wechat.utils.EntityUtils.*;
+
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,14 +32,14 @@ import wang.yongrui.wechat.entity.jpa.UserEntity;
  *
  */
 @JsonIgnoreProperties(value = { "authorities", "password", "accountNonExpired", "accountNonLocked",
-		"credentialsNonExpired", "enabled" })
+		"credentialsNonExpired", "enabled", "createdDate", "createdBy", "lastModifiedDate", "lastModifiedBy" })
 @JsonInclude(value = Include.NON_EMPTY)
 public class User extends UserBasic implements UserDetails {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6176438686196620165L;
+	private static final long serialVersionUID = 1L;
 
 	@Getter
 	@Setter
@@ -68,19 +69,13 @@ public class User extends UserBasic implements UserDetails {
 	}
 
 	/**
-	 * 
+	 * @param userEntity
 	 */
 	public User(UserEntity userEntity) {
 		super();
 		if (null != userEntity) {
 			BeanUtils.copyProperties(userEntity, this);
-			if (CollectionUtils.isNotEmpty(userEntity.getRoleEntitySet())) {
-				Set<Role> roleSet = new LinkedHashSet<>();
-				for (RoleEntity roleEntity : userEntity.getRoleEntitySet()) {
-					roleSet.add(new Role(roleEntity));
-				}
-				setRoleSet(roleSet);
-			}
+
 			if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
 				Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
 				for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
@@ -88,13 +83,11 @@ public class User extends UserBasic implements UserDetails {
 				}
 				setExtendedInfoMap(extendedInfoMap);
 			}
-			if (CollectionUtils.isNotEmpty(userEntity.getPlanEntitySet())) {
-				Set<Plan> planSet = new LinkedHashSet<>();
-				for (PlanEntity planEntity : userEntity.getPlanEntitySet()) {
-					planSet.add(new Plan(planEntity));
-				}
-				setPlanSet(planSet);
-			}
+
+			setRoleSet(
+					getObjectSetFromEntitySetWithHeritage(userEntity.getRoleEntitySet(), RoleEntity.class, Role.class));
+			setPlanSet(
+					getObjectSetFromEntitySetWithHeritage(userEntity.getPlanEntitySet(), PlanEntity.class, Plan.class));
 		}
 	}
 

@@ -16,9 +16,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
-import wang.yongrui.wechat.entity.basic.PlanBasic;
+import wang.yongrui.wechat.entity.basic.CircleDayBasic;
 import wang.yongrui.wechat.entity.jpa.CircleDayEntity;
-import wang.yongrui.wechat.entity.jpa.PlanEntity;
+import wang.yongrui.wechat.entity.jpa.ExerciseEntity;
 
 /**
  * @author Wang Yongrui
@@ -26,7 +26,7 @@ import wang.yongrui.wechat.entity.jpa.PlanEntity;
  */
 @JsonIgnoreProperties(value = { "createdDate", "createdBy", "lastModifiedDate", "lastModifiedBy" })
 @JsonInclude(value = Include.NON_EMPTY)
-public class Plan extends PlanBasic implements Serializable {
+public class CircleDay extends CircleDayBasic implements Serializable {
 
 	/**
 	 * 
@@ -35,24 +35,24 @@ public class Plan extends PlanBasic implements Serializable {
 
 	@Getter
 	@Setter
-	private Set<CircleDay> circleDaySet;
+	private Set<Exercise> exerciseSet;
 
 	/**
 	 * 
 	 */
-	public Plan() {
+	public CircleDay() {
 		super();
 	}
 
 	/**
-	 * @param planEntity
+	 * @param circleDayEntity
 	 */
-	public Plan(PlanEntity planEntity) {
+	public CircleDay(CircleDayEntity circleDayEntity) {
 		super();
-		if (null != planEntity) {
-			BeanUtils.copyProperties(planEntity, this);
-			setCircleDaySet(getObjectSetFromEntitySetWithHeritage(planEntity.getCircleDayEntitySet(),
-					CircleDayEntity.class, CircleDay.class));
+		if (null != circleDayEntity) {
+			BeanUtils.copyProperties(circleDayEntity, this);
+			setExerciseSet(getObjectSetFromEntitySetWithHeritage(circleDayEntity.getExerciseEntitySet(),
+					ExerciseEntity.class, Exercise.class));
 		}
 	}
 

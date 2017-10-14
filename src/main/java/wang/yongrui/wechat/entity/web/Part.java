@@ -3,23 +3,34 @@
  */
 package wang.yongrui.wechat.entity.web;
 
-import java.util.LinkedHashSet;
+import static wang.yongrui.wechat.utils.EntityUtils.*;
+
+import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
 import wang.yongrui.wechat.entity.basic.PartBasic;
-import wang.yongrui.wechat.entity.jpa.ActionEntity;
 import wang.yongrui.wechat.entity.jpa.PartEntity;
 
 /**
  * @author Wang Yongrui
  *
  */
-public class Part extends PartBasic {
+@JsonIgnoreProperties(value = { "createdDate", "createdBy", "lastModifiedDate", "lastModifiedBy" })
+@JsonInclude(value = Include.NON_EMPTY)
+public class Part extends PartBasic implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Getter
 	@Setter
@@ -39,13 +50,7 @@ public class Part extends PartBasic {
 		super();
 		if (null != partEntity) {
 			BeanUtils.copyProperties(partEntity, this);
-			if (CollectionUtils.isNotEmpty(partEntity.getActionEntitySet())) {
-				Set<Action> actionSet = new LinkedHashSet<>();
-				for (ActionEntity actionEntity : partEntity.getActionEntitySet()) {
-					actionSet.add(new Action(actionEntity));
-				}
-				setActionSet(actionSet);
-			}
+			setActionSet(getObjectSetFromEntitySet(partEntity.getActionEntitySet(), Action.class));
 		}
 	}
 

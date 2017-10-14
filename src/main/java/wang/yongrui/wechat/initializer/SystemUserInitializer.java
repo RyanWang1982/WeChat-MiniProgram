@@ -12,10 +12,14 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import wang.yongrui.wechat.entity.enumeration.BodyPart;
 import wang.yongrui.wechat.entity.enumeration.Gender;
 import wang.yongrui.wechat.entity.enumeration.Grade;
 import wang.yongrui.wechat.entity.enumeration.Purpose;
+import wang.yongrui.wechat.entity.enumeration.WeekDay;
 import wang.yongrui.wechat.entity.jpa.ActionEntity;
+import wang.yongrui.wechat.entity.jpa.CircleDayEntity;
+import wang.yongrui.wechat.entity.jpa.ExerciseEntity;
 import wang.yongrui.wechat.entity.jpa.GroupEntity;
 import wang.yongrui.wechat.entity.jpa.PartEntity;
 import wang.yongrui.wechat.entity.jpa.PlanEntity;
@@ -35,29 +39,43 @@ public class SystemUserInitializer {
 	@PostConstruct
 	public void initial() {
 		GroupEntity planGroupEntity = new GroupEntity();
+		planGroupEntity.setForPlan(true);
 		planGroupEntity.setUom("KG");
 		planGroupEntity.setQuantity(20);
 		planGroupEntity.setWeight(50.0);
 		Set<GroupEntity> planGroupEntitySet = new HashSet<>();
 		planGroupEntitySet.add(planGroupEntity);
 
-		ActionEntity planActionEntity = new ActionEntity();
-		planActionEntity.setName("planActionName");
-		planActionEntity.setDescription("planActionDescription");
-		planActionEntity.setImageUrl("planActionImageUrl");
-		planActionEntity.setEquipment("planActionEquipment");
-		planActionEntity.setGroupEntitySet(planGroupEntitySet);
-		Set<ActionEntity> planActionEntitySet = new HashSet<>();
-		planActionEntitySet.add(planActionEntity);
+		PartEntity partEntity = new PartEntity();
+		partEntity.setBodyPart(BodyPart.Chest);
+		partEntity.setName("partName");
+		partEntity.setDescription("partDescription");
+		partEntity.setImageUrl("partEntityImageUrl");
+		partEntity.setPredefined(true);
+		Set<PartEntity> partEntitySet = new HashSet<>();
+		partEntitySet.add(partEntity);
 
-		PartEntity planPartEntity = new PartEntity();
-		planPartEntity.setName("planPartName");
-		planPartEntity.setDescription("planPartDescription");
-		planPartEntity.setImageUrl("planPartEntityImageUrl");
-		planPartEntity.setPredefined(true);
-		planPartEntity.setActionEntitySet(planActionEntitySet);
-		Set<PartEntity> planPartEntitySet = new HashSet<>();
-		planPartEntitySet.add(planPartEntity);
+		ActionEntity actionEntity = new ActionEntity();
+		actionEntity.setName("actionName");
+		actionEntity.setDescription("actionDescription");
+		actionEntity.setImageUrl("actionImageUrl");
+		actionEntity.setEquipment("actionEquipment");
+		actionEntity.setPartEntitySet(partEntitySet);
+		Set<ActionEntity> actionEntitySet = new HashSet<>();
+		actionEntitySet.add(actionEntity);
+
+		ExerciseEntity exerciseEntity = new ExerciseEntity();
+		exerciseEntity.setForPlan(true);
+		exerciseEntity.setActionEntity(actionEntity);
+		exerciseEntity.setGroupEntitySet(planGroupEntitySet);
+		Set<ExerciseEntity> exerciseEntitySet = new HashSet<>();
+		exerciseEntitySet.add(exerciseEntity);
+
+		CircleDayEntity circleDayEntity = new CircleDayEntity();
+		circleDayEntity.setWeekDay(WeekDay.Monday);
+		circleDayEntity.setExerciseEntitySet(exerciseEntitySet);
+		Set<CircleDayEntity> circleDayEntitySet = new HashSet<>();
+		circleDayEntitySet.add(circleDayEntity);
 
 		PlanEntity planEntity = new PlanEntity();
 		planEntity.setName("planName");
@@ -69,8 +87,8 @@ public class SystemUserInitializer {
 		Calendar planToDate = Calendar.getInstance();
 		planToDate.set(2017, 11, 31);
 		planEntity.setToDate(planToDate);
-		planEntity.setRecurring("Mon,Tue,Wed,Thu,Fri");
-		planEntity.setPartEntitySet(planPartEntitySet);
+		planEntity.setGrade(null);
+		planEntity.setCircleDayEntitySet(circleDayEntitySet);
 		Set<PlanEntity> planPlanEntitySet = new HashSet<>();
 		planPlanEntitySet.add(planEntity);
 

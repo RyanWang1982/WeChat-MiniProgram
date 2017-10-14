@@ -9,7 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ import wang.yongrui.wechat.entity.basic.PartBasic;
 @Setter
 public class PartEntity extends PartBasic {
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "PART_ACTION", joinColumns = { @JoinColumn(name = "part_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "action_id") })
 	private Set<ActionEntity> actionEntitySet;
