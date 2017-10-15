@@ -24,6 +24,7 @@ import lombok.Setter;
 import wang.yongrui.wechat.entity.basic.UserBasic;
 import wang.yongrui.wechat.entity.jpa.ExtendedInfoEntity;
 import wang.yongrui.wechat.entity.jpa.PlanEntity;
+import wang.yongrui.wechat.entity.jpa.RealityEntity;
 import wang.yongrui.wechat.entity.jpa.RoleEntity;
 import wang.yongrui.wechat.entity.jpa.UserEntity;
 
@@ -88,6 +89,8 @@ public class User extends UserBasic implements UserDetails {
 					getObjectSetFromEntitySetWithHeritage(userEntity.getRoleEntitySet(), RoleEntity.class, Role.class));
 			setPlanSet(
 					getObjectSetFromEntitySetWithHeritage(userEntity.getPlanEntitySet(), PlanEntity.class, Plan.class));
+			setRealitySet(getObjectSetFromEntitySetWithHeritage(userEntity.getRealityEntitySet(), RealityEntity.class,
+					Reality.class));
 		}
 	}
 

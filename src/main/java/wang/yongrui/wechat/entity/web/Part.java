@@ -50,7 +50,7 @@ public class Part extends PartBasic implements Serializable {
 		super();
 		if (null != partEntity) {
 			BeanUtils.copyProperties(partEntity, this);
-			setActionSet(getObjectSetFromEntitySet(partEntity.getActionEntitySet(), Action.class));
+			setActionSet(getTargetSetFromSourceSet(partEntity.getActionEntitySet(), Action.class));
 		}
 	}
 

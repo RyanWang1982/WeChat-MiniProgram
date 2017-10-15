@@ -3,7 +3,6 @@
  */
 package wang.yongrui.wechat.config;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +12,7 @@ import org.springframework.security.core.userdetails.User;
  * @author Wang Yongrui
  *
  */
-@Configuration
+// @Configuration
 public class UserAuditorAwareConfiguration implements AuditorAware<String> {
 
 	/*

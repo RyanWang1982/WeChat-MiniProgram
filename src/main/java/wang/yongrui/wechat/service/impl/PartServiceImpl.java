@@ -3,6 +3,8 @@
  */
 package wang.yongrui.wechat.service.impl;
 
+import static wang.yongrui.wechat.utils.EntityUtils.*;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import wang.yongrui.wechat.entity.jpa.ActionEntity;
 import wang.yongrui.wechat.entity.jpa.PartEntity;
 import wang.yongrui.wechat.entity.jpa.PartEntity_;
 import wang.yongrui.wechat.entity.jpa.UserEntity;
@@ -51,6 +54,7 @@ public class PartServiceImpl implements PartService {
 			PartEntity partEntity = new PartEntity();
 			BeanUtils.copyProperties(part, partEntity);
 			partEntity.setPredefined(true);
+			partEntity.setActionEntitySet(getTargetSetFromSourceSet(part.getActionSet(), ActionEntity.class));
 			partEntitySet.add(partEntity);
 		}
 		partRepository.save(partEntitySet);

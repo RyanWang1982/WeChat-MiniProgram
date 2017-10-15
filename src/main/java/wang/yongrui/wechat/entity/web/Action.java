@@ -50,7 +50,7 @@ public class Action extends ActionBasic implements Serializable {
 		super();
 		if (null != actionEntity) {
 			BeanUtils.copyProperties(actionEntity, this);
-			setPartSet(getObjectSetFromEntitySet(actionEntity.getPartEntitySet(), Part.class));
+			setPartSet(getTargetSetFromSourceSet(actionEntity.getPartEntitySet(), Part.class));
 		}
 	}
 

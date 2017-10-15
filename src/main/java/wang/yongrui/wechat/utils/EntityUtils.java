@@ -17,26 +17,26 @@ import org.springframework.beans.BeanUtils;
 public class EntityUtils {
 
 	/**
-	 * @param entitySet
-	 * @param objectClass
+	 * @param sourseSet
+	 * @param targetClass
 	 * @return
 	 */
-	public static <E, O> Set<O> getObjectSetFromEntitySet(Set<E> entitySet, Class<O> objectClass) {
-		Set<O> objSet = null;
-		if (CollectionUtils.isNotEmpty(entitySet)) {
-			objSet = new LinkedHashSet<>();
-			for (E entity : entitySet) {
+	public static <S, T> Set<T> getTargetSetFromSourceSet(Set<S> sourseSet, Class<T> targetClass) {
+		Set<T> targetSet = null;
+		if (CollectionUtils.isNotEmpty(sourseSet)) {
+			targetSet = new LinkedHashSet<>();
+			for (S source : sourseSet) {
 				try {
-					O obj = objectClass.newInstance();
-					BeanUtils.copyProperties(entity, obj);
-					objSet.add(obj);
+					T target = targetClass.newInstance();
+					BeanUtils.copyProperties(source, target);
+					targetSet.add(target);
 				} catch (InstantiationException | IllegalAccessException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 
-		return objSet;
+		return targetSet;
 	}
 
 	/**
