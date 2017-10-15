@@ -79,6 +79,7 @@ public class PartServiceImpl implements PartService {
 				PartEntity partEntity = new PartEntity();
 				BeanUtils.copyProperties(part, partEntity);
 				partEntity.setPredefined(false);
+				partEntity.setActionEntitySet(getTargetSetFromSourceSet(part.getActionSet(), ActionEntity.class));
 				partEntitySet.add(partEntity);
 			}
 			userEntity.setCustomedPartEntitySet(partEntitySet);
