@@ -17,6 +17,8 @@ import org.springframework.beans.BeanUtils;
 public class EntityUtils {
 
 	/**
+	 * 浅拷贝，仅拷贝下一级关联的属性，并不拷贝级联关系
+	 * 
 	 * @param sourseSet
 	 * @param targetClass
 	 * @return
@@ -40,6 +42,8 @@ public class EntityUtils {
 	}
 
 	/**
+	 * 深拷贝，除下一级关联的属性外，还要拷贝级联关系以及级联关系的属性
+	 * 
 	 * @param entitySet
 	 * @param entityClass
 	 * @param objectClass

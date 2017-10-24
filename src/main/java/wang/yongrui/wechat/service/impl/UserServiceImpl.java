@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.metamodel.Attribute;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,7 +24,6 @@ import wang.yongrui.wechat.entity.jpa.CircleDayEntity_;
 import wang.yongrui.wechat.entity.jpa.ExerciseEntity_;
 import wang.yongrui.wechat.entity.jpa.ExtendedInfoEntity;
 import wang.yongrui.wechat.entity.jpa.PlanEntity_;
-import wang.yongrui.wechat.entity.jpa.RealityEntity_;
 import wang.yongrui.wechat.entity.jpa.RoleEntity;
 import wang.yongrui.wechat.entity.jpa.UserEntity;
 import wang.yongrui.wechat.entity.jpa.UserEntity_;
@@ -43,9 +42,6 @@ import wang.yongrui.wechat.utils.PatchBeanUtils;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-
-	@Autowired
-	private EntityManager entityManager;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -75,22 +71,8 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		copyProperties(user, userEntity);
 		userEntity = userRepository.saveAndFlush(userEntity);
-		// Detach the entity to get PrivilegeEntity from database
-		entityManager.detach(userEntity);
-		userEntity = userRepository.findOne(userEntity.getId());
 
 		return new User(userEntity);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see wang.yongrui.wechat.service.UserService#retrieveOneById(java.
-	 * lang.Long)
-	 */
-	@Override
-	public User retrieveOneById(Long id) {
-		return new User(userRepository.findOne(id));
 	}
 
 	/*
@@ -109,11 +91,11 @@ public class UserServiceImpl implements UserService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * wang.yongrui.wechat.service.UserService#retrieveOneWithPlanById(java.lang
-	 * .Long)
+	 * wang.yongrui.wechat.service.UserService#retrieveOneWithPlan(java.lang.
+	 * Long)
 	 */
 	@Override
-	public User retrieveOneWithPlanById(Long id) {
+	public User retrieveOneWithPlan(Long id) {
 		UserEntity userEntity = userRepository.findOne((root, criteriaQuery, criteriaBuilder) -> {
 			criteriaQuery.distinct(true);
 			if (Long.class != criteriaQuery.getResultType()) {
@@ -130,33 +112,9 @@ public class UserServiceImpl implements UserService {
 			return criteriaBuilder.equal(root.get(UserEntity_.id), id);
 		});
 
-		return new User(userEntity);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * wang.yongrui.wechat.service.UserService#retrieveOneWithRealityById(java.
-	 * lang.Long)
-	 */
-	@Override
-	public User retrieveOneWithRealityById(Long id) {
-		UserEntity userEntity = userRepository.findOne((root, criteriaQuery, criteriaBuilder) -> {
-			criteriaQuery.distinct(true);
-			if (Long.class != criteriaQuery.getResultType()) {
-				root.fetch(UserEntity_.realityEntitySet, JoinType.LEFT)
-						.fetch(RealityEntity_.exerciseEntitySet, JoinType.LEFT)
-						.fetch(ExerciseEntity_.actionEntity, JoinType.LEFT)
-						.fetch(ActionEntity_.partEntitySet, JoinType.LEFT);
-				root.fetch(UserEntity_.realityEntitySet, JoinType.LEFT)
-						.fetch(RealityEntity_.exerciseEntitySet, JoinType.LEFT)
-						.fetch(ExerciseEntity_.groupEntitySet, JoinType.LEFT);
-			}
-			return criteriaBuilder.equal(root.get(UserEntity_.id), id);
-		});
-
-		return new User(userEntity);
+		Set<Attribute<?, ?>> includedAttributeSet = new HashSet<>();
+		includedAttributeSet.add(UserEntity_.planEntitySet);
+		return new User(userEntity, includedAttributeSet);
 	}
 
 	/*

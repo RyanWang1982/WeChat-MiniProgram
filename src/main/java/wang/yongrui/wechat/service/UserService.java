@@ -20,12 +20,6 @@ public interface UserService extends UserDetailsService {
 	public User create(User user);
 
 	/**
-	 * @param id
-	 * @return
-	 */
-	public User retrieveOneById(Long id);
-
-	/**
 	 * @param wechatUnionId
 	 * @return
 	 */
@@ -35,13 +29,7 @@ public interface UserService extends UserDetailsService {
 	 * @param id
 	 * @return
 	 */
-	public User retrieveOneWithPlanById(Long id);
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	public User retrieveOneWithRealityById(Long id);
+	public User retrieveOneWithPlan(Long id);
 
 	/**
 	 * @param user

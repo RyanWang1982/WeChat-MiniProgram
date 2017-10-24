@@ -8,6 +8,8 @@ import static wang.yongrui.wechat.utils.EntityUtils.*;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.metamodel.Attribute;
+
 import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import wang.yongrui.wechat.entity.basic.ActionBasic;
 import wang.yongrui.wechat.entity.jpa.ActionEntity;
+import wang.yongrui.wechat.entity.jpa.ActionEntity_;
 
 /**
  * @author Wang Yongrui
@@ -31,6 +34,10 @@ public class Action extends ActionBasic implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@Getter
+	@Setter
+	private User user;
 
 	@Getter
 	@Setter
@@ -50,7 +57,20 @@ public class Action extends ActionBasic implements Serializable {
 		super();
 		if (null != actionEntity) {
 			BeanUtils.copyProperties(actionEntity, this);
-			setPartSet(getTargetSetFromSourceSet(actionEntity.getPartEntitySet(), Part.class));
+		}
+	}
+
+	/**
+	 * @param actionEntity
+	 * @param includedAttributeSet
+	 */
+	public Action(ActionEntity actionEntity, Set<Attribute<?, ?>> includedAttributeSet) {
+		super();
+		if (null != actionEntity) {
+			BeanUtils.copyProperties(actionEntity, this);
+			if (includedAttributeSet.contains(ActionEntity_.partEntitySet)) {
+				setPartSet(getTargetSetFromSourceSet(actionEntity.getPartEntitySet(), Part.class));
+			}
 		}
 	}
 

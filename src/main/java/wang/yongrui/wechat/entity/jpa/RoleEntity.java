@@ -12,10 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import wang.yongrui.wechat.entity.basic.RoleBasic;
-
 import lombok.Getter;
 import lombok.Setter;
+import wang.yongrui.wechat.entity.basic.RoleBasic;
 
 /**
  * @author Wang Yongrui
@@ -26,7 +25,7 @@ import lombok.Setter;
 @Setter
 public class RoleEntity extends RoleBasic {
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.REFRESH)
 	@JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "user_id") })
 	private Set<UserEntity> userEntitySet;

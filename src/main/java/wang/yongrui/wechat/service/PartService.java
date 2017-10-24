@@ -17,24 +17,23 @@ public interface PartService {
 	 * @param partSet
 	 * @return
 	 */
-	public boolean createPredefinedPartSet(Set<Part> partSet);
-
-	/**
-	 * @param partSet
-	 * @param userId
-	 * @return
-	 */
-	public boolean createCustomedPartSet(Set<Part> partSet, Long userId);
+	public boolean createPredefinedSet(Set<Part> partSet);
 
 	/**
 	 * @return
 	 */
-	public Set<Part> retrieveAllPredefinedPartSet();
+	public Set<Part> retrieveAllPredefinedSet();
 
 	/**
-	 * @param userId
+	 * @param part
 	 * @return
 	 */
-	public Set<Part> retrieveAllCustomedPartSet(Long userId);
+	public Part putUpdate(Part part);
+
+	/**
+	 * @param part
+	 * @return
+	 */
+	public Part patchUpdate(Part part);
 
 }

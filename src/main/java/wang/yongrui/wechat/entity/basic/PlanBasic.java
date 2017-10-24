@@ -52,6 +52,9 @@ public class PlanBasic extends AuditingEntity {
 	@Column(nullable = false)
 	private boolean predefined;
 
+	@Column(nullable = false)
+	private boolean temporary;
+
 	@Column(nullable = true)
 	@Enumerated(value = EnumType.STRING)
 	private Grade grade;

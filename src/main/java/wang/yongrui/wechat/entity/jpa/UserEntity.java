@@ -26,7 +26,7 @@ import wang.yongrui.wechat.entity.basic.UserBasic;
 @Setter
 public class UserEntity extends UserBasic {
 
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(cascade = CascadeType.REFRESH)
 	@JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "role_id") })
 	private Set<RoleEntity> roleEntitySet;
@@ -36,9 +36,7 @@ public class UserEntity extends UserBasic {
 			@JoinColumn(name = "extended_info_id") })
 	private List<ExtendedInfoEntity> extendedInfoEntityList;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "USER_PLAN", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "plan_id") })
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PlanEntity> planEntitySet;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,8 +45,8 @@ public class UserEntity extends UserBasic {
 	private Set<RealityEntity> realityEntitySet;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "CUSTOMED_PART", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "part_id") })
-	private Set<PartEntity> customedPartEntitySet;
+	@JoinTable(name = "CUSTOMED_ACTION", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "action_id") })
+	private Set<ActionEntity> customedActionEntitySet;
 
 }

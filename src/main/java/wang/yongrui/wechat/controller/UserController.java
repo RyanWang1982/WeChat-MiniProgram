@@ -34,28 +34,23 @@ public class UserController {
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{wechatUnionId}")
-	public ResponseEntity<User> getUser(@PathVariable String wechatUnionId) {
+	@GetMapping("/byWechatUnionId/{wechatUnionId}")
+	public ResponseEntity<User> retrieveOneByWechatUnionId(@PathVariable String wechatUnionId) {
 		return new ResponseEntity<>(userService.retrieveOneByWechatUnionId(wechatUnionId), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}/withPlan")
-	public ResponseEntity<User> retrieveWithPlan(@PathVariable Long id) {
-		return new ResponseEntity<>(userService.retrieveOneWithPlanById(id), HttpStatus.OK);
-	}
-
-	@GetMapping("/{id}/withReality")
-	public ResponseEntity<User> retrieveWithReality(@PathVariable Long id) {
-		return new ResponseEntity<>(userService.retrieveOneWithRealityById(id), HttpStatus.OK);
+	public ResponseEntity<User> retrieveOneWithPlan(@PathVariable Long id) {
+		return new ResponseEntity<>(userService.retrieveOneWithPlan(id), HttpStatus.OK);
 	}
 
 	@PutMapping
-	public ResponseEntity<User> put(@RequestBody User user) {
+	public ResponseEntity<User> putUpdate(@RequestBody User user) {
 		return new ResponseEntity<>(userService.putUpdate(user), HttpStatus.OK);
 	}
 
 	@PatchMapping
-	public ResponseEntity<User> patch(@RequestBody User user) {
+	public ResponseEntity<User> patchUpdate(@RequestBody User user) {
 		return new ResponseEntity<>(userService.patchUpdate(user), HttpStatus.OK);
 	}
 

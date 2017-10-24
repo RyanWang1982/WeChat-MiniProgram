@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.metamodel.Attribute;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +29,7 @@ import wang.yongrui.wechat.entity.jpa.PlanEntity;
 import wang.yongrui.wechat.entity.jpa.RealityEntity;
 import wang.yongrui.wechat.entity.jpa.RoleEntity;
 import wang.yongrui.wechat.entity.jpa.UserEntity;
+import wang.yongrui.wechat.entity.jpa.UserEntity_;
 
 /**
  * @author Wang Yongrui
@@ -60,7 +63,7 @@ public class User extends UserBasic implements UserDetails {
 
 	@Getter
 	@Setter
-	private Set<Part> partSet;
+	private Set<Action> actionSet;
 
 	/**
 	 * 
@@ -76,21 +79,42 @@ public class User extends UserBasic implements UserDetails {
 		super();
 		if (null != userEntity) {
 			BeanUtils.copyProperties(userEntity, this);
+		}
+	}
 
-			if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
-				Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
-				for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
-					extendedInfoMap.put(extendedInfoEntity.getName(), new ExtendedInfo(extendedInfoEntity));
+	/**
+	 * @param userEntity
+	 * @param includedAttributeSet
+	 */
+	public User(UserEntity userEntity, Set<Attribute<?, ?>> includedAttributeSet) {
+		super();
+		if (null != userEntity) {
+			BeanUtils.copyProperties(userEntity, this);
+
+			if (includedAttributeSet.contains(UserEntity_.extendedInfoEntityList)) {
+				if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
+					Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
+					for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
+						extendedInfoMap.put(extendedInfoEntity.getName(), new ExtendedInfo(extendedInfoEntity));
+					}
+					setExtendedInfoMap(extendedInfoMap);
 				}
-				setExtendedInfoMap(extendedInfoMap);
 			}
 
-			setRoleSet(
-					getObjectSetFromEntitySetWithHeritage(userEntity.getRoleEntitySet(), RoleEntity.class, Role.class));
-			setPlanSet(
-					getObjectSetFromEntitySetWithHeritage(userEntity.getPlanEntitySet(), PlanEntity.class, Plan.class));
-			setRealitySet(getObjectSetFromEntitySetWithHeritage(userEntity.getRealityEntitySet(), RealityEntity.class,
-					Reality.class));
+			if (includedAttributeSet.contains(UserEntity_.roleEntitySet)) {
+				setRoleSet(getObjectSetFromEntitySetWithHeritage(userEntity.getRoleEntitySet(), RoleEntity.class,
+						Role.class));
+			}
+
+			if (includedAttributeSet.contains(UserEntity_.planEntitySet)) {
+				setPlanSet(getObjectSetFromEntitySetWithHeritage(userEntity.getPlanEntitySet(), PlanEntity.class,
+						Plan.class));
+			}
+
+			if (includedAttributeSet.contains(UserEntity_.realityEntitySet)) {
+				setRealitySet(getObjectSetFromEntitySetWithHeritage(userEntity.getRealityEntitySet(),
+						RealityEntity.class, Reality.class));
+			}
 		}
 	}
 

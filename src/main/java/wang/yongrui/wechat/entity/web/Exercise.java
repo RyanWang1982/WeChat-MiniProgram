@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.Setter;
 import wang.yongrui.wechat.entity.basic.ExerciseBasic;
 import wang.yongrui.wechat.entity.jpa.ExerciseEntity;
-import wang.yongrui.wechat.entity.jpa.GroupEntity;
 
 /**
  * @author Wang Yongrui
@@ -59,8 +58,7 @@ public class Exercise extends ExerciseBasic implements Serializable {
 				Action action = new Action(exerciseEntity.getActionEntity());
 				setAction(action);
 			}
-			setGroupSet(getObjectSetFromEntitySetWithHeritage(exerciseEntity.getGroupEntitySet(), GroupEntity.class,
-					Group.class));
+			setGroupSet(getTargetSetFromSourceSet(exerciseEntity.getGroupEntitySet(), Group.class));
 		}
 	}
 

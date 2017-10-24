@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,25 +31,24 @@ public class PartController {
 	private PartService partService;
 
 	@PostMapping("/predefinedOnes")
-	public ResponseEntity<String> createPredefinedPartSet(@RequestBody Set<Part> partSet) {
-		partService.createPredefinedPartSet(partSet);
-		return new ResponseEntity<>("Succeed", HttpStatus.CREATED);
-	}
-
-	@PostMapping("/customedOnes/{userId}")
-	public ResponseEntity<String> createCustomedPartSet(@RequestBody Set<Part> partSet, @PathVariable Long userId) {
-		partService.createCustomedPartSet(partSet, userId);
+	public ResponseEntity<String> createPredefinedSet(@RequestBody Set<Part> partSet) {
+		partService.createPredefinedSet(partSet);
 		return new ResponseEntity<>("Succeed", HttpStatus.CREATED);
 	}
 
 	@GetMapping("/allPredefinedOnes")
-	public ResponseEntity<Set<Part>> getAllPredefinedPartSet() {
-		return new ResponseEntity<>(partService.retrieveAllPredefinedPartSet(), HttpStatus.OK);
+	public ResponseEntity<Set<Part>> retrieveAllPredefinedSet() {
+		return new ResponseEntity<>(partService.retrieveAllPredefinedSet(), HttpStatus.OK);
 	}
 
-	@GetMapping("/allCustomedOnes/{userId}")
-	public ResponseEntity<Set<Part>> getAllCustomedPartSet(@PathVariable Long userId) {
-		return new ResponseEntity<>(partService.retrieveAllCustomedPartSet(userId), HttpStatus.OK);
+	@PutMapping
+	public ResponseEntity<Part> putUpdat(@RequestBody Part part) {
+		return new ResponseEntity<>(partService.putUpdate(part), HttpStatus.OK);
+	}
+
+	@PatchMapping
+	public ResponseEntity<Part> patchUpdate(@RequestBody Part part) {
+		return new ResponseEntity<>(partService.patchUpdate(part), HttpStatus.OK);
 	}
 
 }

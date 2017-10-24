@@ -35,6 +35,10 @@ public class Plan extends PlanBasic implements Serializable {
 
 	@Getter
 	@Setter
+	private User user;
+
+	@Getter
+	@Setter
 	private Set<CircleDay> circleDaySet;
 
 	/**

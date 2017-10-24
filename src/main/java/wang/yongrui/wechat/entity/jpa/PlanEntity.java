@@ -8,7 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -24,9 +24,11 @@ import wang.yongrui.wechat.entity.basic.PlanBasic;
 @Setter
 public class PlanEntity extends PlanBasic {
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "PLAN_CIRCLE_DAY", joinColumns = { @JoinColumn(name = "plan_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "circle_day_id") })
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity userEntity;
+
+	@OneToMany(mappedBy = "planEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CircleDayEntity> circleDayEntitySet;
 
 }

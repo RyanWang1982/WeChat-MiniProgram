@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +35,7 @@ public class SystemUserInitializer {
 	@Autowired
 	private UserRepository userRepository;
 
-	@PostConstruct
+	// @PostConstruct
 	public void initial() {
 		GroupEntity planGroupEntity = new GroupEntity();
 		planGroupEntity.setForPlan(true);
