@@ -50,11 +50,13 @@ public class PartServiceImpl implements PartService {
 			for (Part part : partSet) {
 				PartEntity partEntity = new PartEntity();
 				copyProperties(part, partEntity);
+				part.setPredefined(true);
 				if (CollectionUtils.isNotEmpty(part.getActionSet())) {
 					Set<ActionEntity> actionEntitySet = new LinkedHashSet<>();
 					for (Action action : part.getActionSet()) {
 						ActionEntity actionEntity = new ActionEntity();
 						copyProperties(action, actionEntity);
+						actionEntity.setPredefined(true);
 						actionEntitySet.add(actionEntity);
 					}
 					partEntity.setActionEntitySet(actionEntitySet);

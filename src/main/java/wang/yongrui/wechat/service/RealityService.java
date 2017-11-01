@@ -25,7 +25,7 @@ public interface RealityService {
 	 * @param id
 	 * @return
 	 */
-	public Reality retrieveOne(String id);
+	public Reality retrieveOne(Long id);
 
 	/**
 	 * @param realityCriteria
@@ -39,11 +39,5 @@ public interface RealityService {
 	 * @return
 	 */
 	public Reality putUpdate(Reality reality);
-
-	/**
-	 * @param reality
-	 * @return
-	 */
-	public Reality patchUpdate(Reality reality);
 
 }

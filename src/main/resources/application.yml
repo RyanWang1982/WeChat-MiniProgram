@@ -5,6 +5,8 @@ spring:
     url: jdbc:mysql://localhost:3306/miniprogram?createDatabaseIfNotExist=true
     username: sa
     password: Welcome1
+    # data:
+    #   - classpath:initialdata/user.sql
   jpa:
     show-sql: true
     generate-ddl: true

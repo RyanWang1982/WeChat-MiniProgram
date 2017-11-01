@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +37,7 @@ public class RealityController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Reality> retrieveOne(@PathVariable String id) {
+	public ResponseEntity<Reality> retrieveOne(@PathVariable Long id) {
 		return new ResponseEntity<>(realityService.retrieveOne(id), HttpStatus.OK);
 	}
 
@@ -50,11 +49,6 @@ public class RealityController {
 	@PutMapping
 	public ResponseEntity<Reality> put(@RequestBody Reality reality) {
 		return new ResponseEntity<>(realityService.putUpdate(reality), HttpStatus.OK);
-	}
-
-	@PatchMapping
-	public ResponseEntity<Reality> patch(@RequestBody Reality reality) {
-		return new ResponseEntity<>(realityService.patchUpdate(reality), HttpStatus.OK);
 	}
 
 }

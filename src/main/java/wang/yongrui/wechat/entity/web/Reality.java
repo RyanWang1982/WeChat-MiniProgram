@@ -35,6 +35,10 @@ public class Reality extends RealityBasic implements Serializable {
 
 	@Getter
 	@Setter
+	private User user;
+
+	@Getter
+	@Setter
 	private Set<Exercise> exerciseSet;
 
 	/**

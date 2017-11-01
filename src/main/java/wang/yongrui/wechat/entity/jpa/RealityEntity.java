@@ -8,7 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -24,9 +24,11 @@ import wang.yongrui.wechat.entity.basic.RealityBasic;
 @Setter
 public class RealityEntity extends RealityBasic {
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "REALITY_EXERCISE", joinColumns = { @JoinColumn(name = "reality_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "exercise_id") })
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity userEntity;
+
+	@OneToMany(mappedBy = "realityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ExerciseEntity> exerciseEntitySet;
 
 }

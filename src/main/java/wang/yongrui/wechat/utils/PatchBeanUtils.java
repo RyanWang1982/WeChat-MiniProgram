@@ -3,13 +3,14 @@
  */
 package wang.yongrui.wechat.utils;
 
+import static org.springframework.beans.BeanUtils.*;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
@@ -20,7 +21,7 @@ import org.springframework.util.ClassUtils;
  * @author Wang Yongrui
  *
  */
-public class PatchBeanUtils extends BeanUtils {
+public class PatchBeanUtils {
 
 	/**
 	 * @param source

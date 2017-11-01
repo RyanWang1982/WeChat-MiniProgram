@@ -39,9 +39,7 @@ public class UserEntity extends UserBasic {
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PlanEntity> planEntitySet;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = "USER_REALITY", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "reality_id") })
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<RealityEntity> realityEntitySet;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

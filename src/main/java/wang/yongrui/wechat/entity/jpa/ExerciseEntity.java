@@ -29,6 +29,10 @@ public class ExerciseEntity extends ExerciseBasic {
 	@JoinColumn(name = "circle_day_id")
 	private CircleDayEntity circleDayEntity;
 
+	@ManyToOne
+	@JoinColumn(name = "reality_id")
+	private RealityEntity realityEntity;
+
 	@OneToOne
 	@JoinColumn(name = "action_id")
 	private ActionEntity actionEntity;

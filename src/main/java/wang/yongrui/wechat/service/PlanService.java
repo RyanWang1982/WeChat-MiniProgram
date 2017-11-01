@@ -40,10 +40,4 @@ public interface PlanService {
 	 */
 	public Plan putUpdate(Plan plan);
 
-	/**
-	 * @param plan
-	 * @return
-	 */
-	public Plan patchUpdate(Plan plan);
-
 }
