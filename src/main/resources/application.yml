@@ -1,20 +1,46 @@
 # Spring
 spring:
+  profiles: Aliyun
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://rm-bp1384g0a656991q8do.mysql.rds.aliyuncs.com:3306/alt?createDatabaseIfNotExist=true
     username: root
     password: Wetech1234
-    # data:
-    #   - classpath:initialdata/user.sql
+    schema: classpath:initialdata/schema.sql
+    data: classpath:initialdata/data.sql
+    sql-script-encoding: utf8
   jpa:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     show-sql: true
-    generate-ddl: true
     hibernate:
-      ddl-auto: create
-  thymeleaf:
-    cache: false
+      ddl-auto: update
+
+# Server
+server:
+  port: 443
+  ssl:
+    key-store: classpath:newpictown.jks
+    key-password: 214040872140141
+    key-store-type: JKS
+
+
+---
+# Spring
+spring:
+  profiles: localhost
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/alt?createDatabaseIfNotExist=true
+    username: sa
+    password: Welcome1
+    schema: classpath:initialdata/schema.sql
+    data: classpath:initialdata/data.sql
+    sql-script-encoding: utf8
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
 # Server
 server:

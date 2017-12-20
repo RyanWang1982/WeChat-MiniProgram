@@ -7,7 +7,9 @@ import static org.springframework.beans.BeanUtils.*;
 import static wang.yongrui.wechat.utils.EntityUtils.*;
 import static wang.yongrui.wechat.utils.PatchBeanUtils.*;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.criteria.JoinType;
@@ -47,16 +49,22 @@ public class PartServiceImpl implements PartService {
 	public boolean createPredefinedSet(Set<Part> partSet) {
 		if (CollectionUtils.isNotEmpty(partSet)) {
 			Set<PartEntity> partEntitySet = new LinkedHashSet<>();
+			Map<String, ActionEntity> allActionEntityMap = new HashMap<>();
 			for (Part part : partSet) {
+				part.setId(null);
 				PartEntity partEntity = new PartEntity();
 				copyProperties(part, partEntity);
-				part.setPredefined(true);
+				partEntity.setPredefined(true);
 				if (CollectionUtils.isNotEmpty(part.getActionSet())) {
 					Set<ActionEntity> actionEntitySet = new LinkedHashSet<>();
 					for (Action action : part.getActionSet()) {
-						ActionEntity actionEntity = new ActionEntity();
+						ActionEntity actionEntity = null == allActionEntityMap.get(action.getName())
+								? new ActionEntity() : allActionEntityMap.get(action.getName());
+						action.setId(null);
+						action.setPartSet(null);
 						copyProperties(action, actionEntity);
 						actionEntity.setPredefined(true);
+						allActionEntityMap.put(action.getName(), actionEntity);
 						actionEntitySet.add(actionEntity);
 					}
 					partEntity.setActionEntitySet(actionEntitySet);
