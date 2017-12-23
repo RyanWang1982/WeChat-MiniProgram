@@ -20,6 +20,12 @@ public interface UserService extends UserDetailsService {
 	public User create(User user);
 
 	/**
+	 * @param wechatMPOpenId
+	 * @return
+	 */
+	public User retrieveOneByWechatMPOpenId(String wechatMPOpenId);
+
+	/**
 	 * @param wechatUnionId
 	 * @return
 	 */

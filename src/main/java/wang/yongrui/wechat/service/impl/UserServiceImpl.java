@@ -79,6 +79,18 @@ public class UserServiceImpl implements UserService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * wang.yongrui.wechat.service.UserService#retrieveOneByWechatMPOpenId(java.
+	 * lang.String)
+	 */
+	@Override
+	public User retrieveOneByWechatMPOpenId(String wechatMPOpenId) {
+		return new User(userRepository.findByWechatMPOpenId(wechatMPOpenId));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * wang.yongrui.wechat.service.UserService#retrieveOneByWechatUnionId(java.
 	 * lang.String)
 	 */

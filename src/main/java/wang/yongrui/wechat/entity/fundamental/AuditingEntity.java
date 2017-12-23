@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +35,7 @@ public class AuditingEntity {
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss SSS")
+	@ApiModelProperty(example = "yyyy-MM-dd HH:mm:ss SSS")
 	private Calendar createdDate;
 
 	@CreatedBy
@@ -43,6 +45,7 @@ public class AuditingEntity {
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss SSS")
+	@ApiModelProperty(example = "yyyy-MM-dd HH:mm:ss SSS")
 	private Calendar lastModifiedDate;
 
 	@LastModifiedBy

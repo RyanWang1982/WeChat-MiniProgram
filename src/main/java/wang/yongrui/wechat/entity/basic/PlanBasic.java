@@ -14,6 +14,7 @@ import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import wang.yongrui.wechat.entity.enumeration.Grade;
@@ -43,10 +44,12 @@ public class PlanBasic extends AuditingEntity {
 
 	@Column(nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@ApiModelProperty(example = "yyyy-MM-dd")
 	private Calendar fromDate;
 
 	@Column(nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@ApiModelProperty(example = "yyyy-MM-dd")
 	private Calendar toDate;
 
 	@Column(nullable = false)

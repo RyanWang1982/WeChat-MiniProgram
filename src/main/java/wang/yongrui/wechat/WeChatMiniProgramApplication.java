@@ -1,5 +1,7 @@
 package wang.yongrui.wechat;
 
+import java.util.Calendar;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -33,7 +35,8 @@ public class WeChatMiniProgramApplication extends SpringBootServletInitializer {
 	@Bean
 	public Docket swaggerAPI() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("wang.yongrui")).paths(PathSelectors.any()).build();
+				.apis(RequestHandlerSelectors.basePackage("wang.yongrui")).paths(PathSelectors.any()).build()
+				.directModelSubstitute(Calendar.class, String.class);
 	}
 
 }

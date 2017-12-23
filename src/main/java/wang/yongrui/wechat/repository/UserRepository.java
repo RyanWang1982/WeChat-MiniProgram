@@ -23,6 +23,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpec
 	public UserEntity findByLoginName(String loginName);
 
 	/**
+	 * @param wechatMPOpenId
+	 * @return
+	 */
+	public UserEntity findByWechatMPOpenId(String wechatMPOpenId);
+
+	/**
 	 * @param wechatUnionId
 	 * @return
 	 */

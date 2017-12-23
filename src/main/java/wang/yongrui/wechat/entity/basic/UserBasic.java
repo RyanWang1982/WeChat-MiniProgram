@@ -14,6 +14,7 @@ import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import wang.yongrui.wechat.entity.enumeration.Gender;
@@ -56,10 +57,12 @@ public class UserBasic extends AuditingEntity {
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
+	@ApiModelProperty(required = true)
 	private Gender gender;
 
 	@Column(nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@ApiModelProperty(required = true, example = "yyyy-MM-dd")
 	private Calendar dateOfBirth;
 
 	@Column(unique = true)

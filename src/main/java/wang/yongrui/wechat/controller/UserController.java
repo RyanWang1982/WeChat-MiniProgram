@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import wang.yongrui.wechat.entity.web.User;
 import wang.yongrui.wechat.service.UserService;
 
@@ -29,9 +30,15 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value = "", notes = "gender, dateOfBirth should not be null; loginName, wechatUnionId, wechatMPOpenId, mobileNumber, email, avatarUrl should be unique")
 	@PostMapping
 	public ResponseEntity<User> create(@RequestBody User user) {
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
+	}
+
+	@GetMapping("/byWechatMPOpenId/{wechatMPOpenId}")
+	public ResponseEntity<User> retrieveOneByWechatMPOpenId(@PathVariable String wechatMPOpenId) {
+		return new ResponseEntity<>(userService.retrieveOneByWechatMPOpenId(wechatMPOpenId), HttpStatus.OK);
 	}
 
 	@GetMapping("/byWechatUnionId/{wechatUnionId}")
