@@ -42,6 +42,7 @@ public class CircleDayBasic extends AuditingEntity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((weekDay == null) ? 0 : weekDay.hashCode());
 		return result;
 	}
 
@@ -63,6 +64,8 @@ public class CircleDayBasic extends AuditingEntity {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (weekDay != other.weekDay)
 			return false;
 		return true;
 	}

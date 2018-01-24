@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
 	public User create(User user) {
 		UserEntity userEntity = new UserEntity();
 		copyProperties(user, userEntity);
-		userEntity = userRepository.saveAndFlush(userEntity);
+		UserEntity newUserEntity = userRepository.saveAndFlush(userEntity);
 
-		return new User(userEntity);
+		return new User(newUserEntity);
 	}
 
 	/*

@@ -52,9 +52,9 @@ public class PartServiceImpl implements PartService {
 			Map<String, ActionEntity> allActionEntityMap = new HashMap<>();
 			for (Part part : partSet) {
 				part.setId(null);
+				part.setPredefined(true);
 				PartEntity partEntity = new PartEntity();
 				copyProperties(part, partEntity);
-				partEntity.setPredefined(true);
 				if (CollectionUtils.isNotEmpty(part.getActionSet())) {
 					Set<ActionEntity> actionEntitySet = new LinkedHashSet<>();
 					for (Action action : part.getActionSet()) {
@@ -62,8 +62,8 @@ public class PartServiceImpl implements PartService {
 								? new ActionEntity() : allActionEntityMap.get(action.getName());
 						action.setId(null);
 						action.setPartSet(null);
+						action.setPredefined(true);
 						copyProperties(action, actionEntity);
-						actionEntity.setPredefined(true);
 						allActionEntityMap.put(action.getName(), actionEntity);
 						actionEntitySet.add(actionEntity);
 					}
@@ -105,8 +105,8 @@ public class PartServiceImpl implements PartService {
 	public Part putUpdate(Part part) {
 		PartEntity partEntity = partRepository.findOne(part.getId());
 		updateProperties(part, partEntity, false);
-		partEntity = partRepository.saveAndFlush(partEntity);
-		return new Part(partEntity);
+		PartEntity newPartEntity = partRepository.saveAndFlush(partEntity);
+		return new Part(newPartEntity);
 	}
 
 	/*
@@ -120,8 +120,8 @@ public class PartServiceImpl implements PartService {
 	public Part patchUpdate(Part part) {
 		PartEntity partEntity = partRepository.findOne(part.getId());
 		updateProperties(part, partEntity, true);
-		partEntity = partRepository.saveAndFlush(partEntity);
-		return new Part(partEntity);
+		PartEntity newPartEntity = partRepository.saveAndFlush(partEntity);
+		return new Part(newPartEntity);
 	}
 
 }

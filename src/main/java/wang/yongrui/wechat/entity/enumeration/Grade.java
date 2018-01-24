@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum Grade implements BasicEnum {
 
-	Primary("Primary"), Medium("Medium"), Professional("Professional");
+	Primary("初级"), Medium("中级"), Senior("高级");
 
 	private String description;
 

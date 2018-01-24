@@ -3,6 +3,8 @@
  */
 package wang.yongrui.wechat.service;
 
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +24,11 @@ public interface PlanService {
 	public Plan create(Plan plan);
 
 	/**
+	 * @param planSet
+	 */
+	public boolean createPredefinedSet(Set<Plan> planSet);
+
+	/**
 	 * @param id
 	 * @return
 	 */
@@ -33,6 +40,12 @@ public interface PlanService {
 	 * @return
 	 */
 	public Page<Plan> retrievePage(PlanCriteria planCriteria, Pageable pageable);
+
+	/**
+	 * @param planCriteria
+	 * @return
+	 */
+	public Set<Plan> retrieveAllPredefinedOnes(PlanCriteria planCriteria);
 
 	/**
 	 * @param plan

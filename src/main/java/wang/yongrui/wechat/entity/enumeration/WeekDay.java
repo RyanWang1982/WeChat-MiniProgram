@@ -12,8 +12,7 @@ import lombok.Getter;
 @Getter
 public enum WeekDay implements BasicEnum {
 
-	Sunday("Sunday"), Monday("Monday"), Tuesday("Tuesday"), Wednesday("Wednesday"), Thursday("Thursday"), Friday(
-			"Friday"), Saturday("Saturday");
+	Sunday("日"), Monday("一"), Tuesday("二"), Wednesday("三"), Thursday("四"), Friday("五"), Saturday("六");
 
 	private String description;
 

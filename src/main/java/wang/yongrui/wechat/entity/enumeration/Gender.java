@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum Gender implements BasicEnum {
 
-	Unknown("Unknown"), Male("Male"), Female("Female");
+	Unknown("未知"), Male("男"), Female("女");
 
 	private String description;
 
@@ -26,8 +26,7 @@ public enum Gender implements BasicEnum {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * wang.yongrui.wechat.entity.enumeration.BasicEnum#getName()
+	 * @see wang.yongrui.wechat.entity.enumeration.BasicEnum#getName()
 	 */
 	@Override
 	public String getName() {

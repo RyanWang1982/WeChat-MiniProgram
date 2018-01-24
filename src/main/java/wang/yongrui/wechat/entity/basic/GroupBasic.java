@@ -26,22 +26,28 @@ public class GroupBasic extends AuditingEntity {
 	private Long id;
 
 	@Column(nullable = false)
+	private Integer orderNumber;
+
+	@Column(nullable = false)
 	private boolean forPlan;
 
 	@Column(nullable = false)
-	private String uom;
+	private String groupUom;
 
 	@Column(nullable = false)
-	private Integer quantity;
+	private String actionUom;
 
 	@Column(nullable = false)
-	private Double weight;
+	private Integer quantityPerGroup;
 
-	@Column(nullable = true)
-	private Integer executedQuantity;
+	@Column(nullable = false)
+	private Integer quantityPerAction;
 
-	@Column(nullable = true)
-	private Double executedWeight;
+	@Column
+	private Integer executedQuantityPerGroup;
+
+	@Column
+	private Integer executedQuantityPerAction;
 
 	/*
 	 * (non-Javadoc)
@@ -53,6 +59,7 @@ public class GroupBasic extends AuditingEntity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((orderNumber == null) ? 0 : orderNumber.hashCode());
 		return result;
 	}
 
@@ -74,6 +81,11 @@ public class GroupBasic extends AuditingEntity {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (orderNumber == null) {
+			if (other.orderNumber != null)
+				return false;
+		} else if (!orderNumber.equals(other.orderNumber))
 			return false;
 		return true;
 	}

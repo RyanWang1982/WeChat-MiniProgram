@@ -3,6 +3,8 @@
  */
 package wang.yongrui.wechat.controller;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,12 @@ public class PlanController {
 		return new ResponseEntity<>(planService.create(plan), HttpStatus.CREATED);
 	}
 
+	@PostMapping("/predefinedOnes")
+	public ResponseEntity<String> createPredefinedSet(@RequestBody Set<Plan> planSet) {
+		planService.createPredefinedSet(planSet);
+		return new ResponseEntity<>("Succeed", HttpStatus.CREATED);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Plan> retrieveOne(@PathVariable Long id) {
 		return new ResponseEntity<>(planService.retrieveOne(id), HttpStatus.OK);
@@ -44,6 +52,11 @@ public class PlanController {
 	@PostMapping("/page")
 	public ResponseEntity<Page<Plan>> retrievePage(@RequestBody PlanCriteria planCriteria, Pageable pageable) {
 		return new ResponseEntity<>(planService.retrievePage(planCriteria, pageable), HttpStatus.OK);
+	}
+
+	@PostMapping("/allPredefinedOnesRetrieve")
+	public ResponseEntity<Set<Plan>> retrieveAllPredefinedOnes(@RequestBody PlanCriteria planCriteria) {
+		return new ResponseEntity<>(planService.retrieveAllPredefinedOnes(planCriteria), HttpStatus.OK);
 	}
 
 	@PutMapping

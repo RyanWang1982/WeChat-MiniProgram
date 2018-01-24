@@ -79,6 +79,14 @@ public class User extends UserBasic implements UserDetails {
 		super();
 		if (null != userEntity) {
 			BeanUtils.copyProperties(userEntity, this);
+
+			if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
+				Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
+				for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
+					extendedInfoMap.put(extendedInfoEntity.getName(), new ExtendedInfo(extendedInfoEntity));
+				}
+				setExtendedInfoMap(extendedInfoMap);
+			}
 		}
 	}
 
@@ -91,14 +99,12 @@ public class User extends UserBasic implements UserDetails {
 		if (null != userEntity) {
 			BeanUtils.copyProperties(userEntity, this);
 
-			if (includedAttributeSet.contains(UserEntity_.extendedInfoEntityList)) {
-				if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
-					Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
-					for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
-						extendedInfoMap.put(extendedInfoEntity.getName(), new ExtendedInfo(extendedInfoEntity));
-					}
-					setExtendedInfoMap(extendedInfoMap);
+			if (CollectionUtils.isNotEmpty(userEntity.getExtendedInfoEntityList())) {
+				Map<String, ExtendedInfo> extendedInfoMap = new HashMap<>();
+				for (ExtendedInfoEntity extendedInfoEntity : userEntity.getExtendedInfoEntityList()) {
+					extendedInfoMap.put(extendedInfoEntity.getName(), new ExtendedInfo(extendedInfoEntity));
 				}
+				setExtendedInfoMap(extendedInfoMap);
 			}
 
 			if (includedAttributeSet.contains(UserEntity_.roleEntitySet)) {

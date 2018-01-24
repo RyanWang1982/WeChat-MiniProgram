@@ -66,6 +66,7 @@ public class RealityServiceImpl implements RealityService {
 	@Override
 	public Reality create(Reality reality) {
 		RealityEntity realityEntity = new RealityEntity();
+		reality.setId(null);
 		copyProperties(reality, realityEntity);
 		UserEntity userEntity = userRepository.findOne(reality.getUser().getId());
 		realityEntity.setUserEntity(userEntity);
@@ -73,6 +74,8 @@ public class RealityServiceImpl implements RealityService {
 		Set<ExerciseEntity> exerciseEntitySet = new LinkedHashSet<>();
 		for (Exercise exercise : reality.getExerciseSet()) {
 			ExerciseEntity exerciseEntity = new ExerciseEntity();
+			exercise.setId(null);
+			exercise.setForPlan(false);
 			copyProperties(exercise, exerciseEntity);
 			ActionEntity actionEntity = new ActionEntity();
 			copyProperties(exercise.getAction(), actionEntity);
@@ -80,6 +83,8 @@ public class RealityServiceImpl implements RealityService {
 			Set<GroupEntity> groupEntitySet = new LinkedHashSet<>();
 			for (Group group : exercise.getGroupSet()) {
 				GroupEntity groupEntity = new GroupEntity();
+				group.setId(null);
+				group.setForPlan(false);
 				copyProperties(group, groupEntity);
 				groupEntity.setExerciseEntity(exerciseEntity);
 				groupEntitySet.add(groupEntity);
@@ -90,10 +95,10 @@ public class RealityServiceImpl implements RealityService {
 		}
 
 		realityEntity.setExerciseEntitySet(exerciseEntitySet);
-		realityEntity = realityRepository.saveAndFlush(realityEntity);
-		entityManager.refresh(realityEntity);
+		RealityEntity newRealityEntity = realityRepository.saveAndFlush(realityEntity);
+		entityManager.refresh(newRealityEntity);
 
-		return retrieveOne(realityEntity.getId());
+		return retrieveOne(newRealityEntity.getId());
 	}
 
 	/*
@@ -147,12 +152,12 @@ public class RealityServiceImpl implements RealityService {
 			}
 
 			if (null != realityCriteria.getFromDate()) {
-				restrictions = criteriaBuilder.and(restrictions,
-						criteriaBuilder.greaterThan(root.get(RealityEntity_.date), realityCriteria.getFromDate()));
+				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder
+						.greaterThanOrEqualTo(root.get(RealityEntity_.date), realityCriteria.getFromDate()));
 			}
 			if (null != realityCriteria.getToDate()) {
 				restrictions = criteriaBuilder.and(restrictions,
-						criteriaBuilder.lessThan(root.get(RealityEntity_.date), realityCriteria.getToDate()));
+						criteriaBuilder.lessThanOrEqualTo(root.get(RealityEntity_.date), realityCriteria.getToDate()));
 			}
 			return restrictions;
 		}, pageable);

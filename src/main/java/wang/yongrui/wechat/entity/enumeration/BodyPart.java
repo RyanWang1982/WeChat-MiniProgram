@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum BodyPart implements BasicEnum {
 
-	Chest("Chest"), Shoulder("Shoulder"), Back("Back"), Waist("Waist"), Abdomen("Abdomen"), Arm("Arm"), Leg("Leg");
+	Whole("全身"), Chest("胸部"), Shoulder("肩部"), Back("背部"), Waist("腰部"), Abdomen("腹部"), Arm("手臂"), Leg("腿部");
 
 	private String description;
 

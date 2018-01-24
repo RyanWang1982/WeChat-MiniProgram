@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum Purpose implements BasicEnum {
 
-	Weight("Weight"), Muscle("Muscle"), Physique("Physique");
+	Weight("减脂"), Muscle("增肌"), Physique("塑形");
 
 	private String description;
 

@@ -55,6 +55,9 @@ public class Reality extends RealityBasic implements Serializable {
 		super();
 		if (null != realityEntity) {
 			BeanUtils.copyProperties(realityEntity, this);
+			User user = new User();
+			user.setId(realityEntity.getUserEntity().getId());
+			setUser(user);
 			setExerciseSet(getObjectSetFromEntitySetWithHeritage(realityEntity.getExerciseEntitySet(),
 					ExerciseEntity.class, Exercise.class));
 		}

@@ -26,7 +26,7 @@ import wang.yongrui.wechat.entity.jpa.ActionEntity_;
  * @author Wang Yongrui
  *
  */
-@JsonIgnoreProperties(value = { "createdDate", "createdBy", "lastModifiedDate", "lastModifiedBy" })
+@JsonIgnoreProperties(value = { "createdDate", "createdBy", "lastModifiedBy" })
 @JsonInclude(value = Include.NON_EMPTY)
 public class Action extends ActionBasic implements Serializable {
 

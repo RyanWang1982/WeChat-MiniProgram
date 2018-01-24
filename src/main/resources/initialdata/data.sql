@@ -14,7 +14,9 @@ INSERT INTO part (id, body_part, description, image_url, name, predefined) VALUE
 (13,'Chest','','image/bodyparts/chest.png','胸下部',1),
 (14,'Arm','','image/bodyparts/arm.png','肱三头',1),
 (15,'Chest','','image/bodyparts/chest.png','胸中部',1),
-(16,'Waist','','image/bodyparts/waist.png','腰部',1);
+(16,'Waist','','image/bodyparts/waist.png','腰部',1),
+(17,'Whole','','image/bodyparts/aerobic.png','全身',1);
+UPDATE part SET last_modified_date = CURDATE();
 
 
 INSERT INTO action (id, description, equipment, image_url, name, predefined) VALUES 
@@ -111,7 +113,18 @@ INSERT INTO action (id, description, equipment, image_url, name, predefined) VAL
 (91,'','','image/actions/chest/cable_crossover.png','拉力器十字夹胸',1),
 (92,'','','image/actions/chest/horizontal_dumbbell_bench_press.png','平板哑铃卧推',1),
 (93,'','','image/actions/waist/back_hyperextension.png','山羊挺身',1),
-(94,'','','image/actions/waist/cross_lift.png','十字挺身',1);
+(94,'','','image/actions/waist/cross_lift.png','十字挺身',1),
+(95,'','','image/actions/aerobic/rope_skipping.png','跳绳',1),
+(96,'','','image/actions/aerobic/jumping_jacks.png','开合跳',1),
+(97,'','','image/actions/aerobic/spinning.png','动感单车',1),
+(98,'','','image/actions/aerobic/elliptical_machine.png','椭圆机',1),
+(99,'','','image/actions/aerobic/place_high_leg_on_the_spot.png','原地高抬腿',1),
+(100,'','','image/actions/aerobic/fast_walking.png','快走',1),
+(101,'','','image/actions/aerobic/canter.png','慢跑',1),
+(102,'','','image/actions/aerobic/running_on_the_spot.png','原地跑步',1),
+(103,'','','image/actions/aerobic/climbing.png','登山机',1),
+(104,'','','image/actions/aerobic/bend_over_climbing.png','俯身登山',1);
+UPDATE action SET last_modified_date = CURDATE();
 
 
 INSERT INTO part_action (part_id, action_id) VALUES 
@@ -213,4 +226,14 @@ INSERT INTO part_action (part_id, action_id) VALUES
 (16,28),
 (16,59),
 (16,93),
-(16,94);
+(16,94),
+(17,95),
+(17,96),
+(17,97),
+(17,98),
+(17,99),
+(17,100),
+(17,101),
+(17,102),
+(17,103),
+(17,104);

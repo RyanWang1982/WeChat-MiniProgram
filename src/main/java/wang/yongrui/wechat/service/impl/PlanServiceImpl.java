@@ -4,18 +4,17 @@
 package wang.yongrui.wechat.service.impl;
 
 import static org.springframework.beans.BeanUtils.*;
-import static wang.yongrui.wechat.utils.PatchBeanUtils.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -52,9 +51,6 @@ import wang.yongrui.wechat.service.PlanService;
 public class PlanServiceImpl implements PlanService {
 
 	@Autowired
-	private EntityManager entityManager;
-
-	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -70,6 +66,8 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public Plan create(Plan plan) {
 		PlanEntity planEntity = new PlanEntity();
+		plan.setId(null);
+		plan.setPredefined(false);
 		copyProperties(plan, planEntity);
 		UserEntity userEntity = userRepository.findOne(plan.getUser().getId());
 		planEntity.setUserEntity(userEntity);
@@ -77,10 +75,13 @@ public class PlanServiceImpl implements PlanService {
 		Set<CircleDayEntity> circleDayEntitySet = new LinkedHashSet<>();
 		for (CircleDay circleDay : plan.getCircleDaySet()) {
 			CircleDayEntity circleDayEntity = new CircleDayEntity();
+			circleDay.setId(null);
 			copyProperties(circleDay, circleDayEntity);
 			Set<ExerciseEntity> exerciseEntitySet = new LinkedHashSet<>();
 			for (Exercise exercise : circleDay.getExerciseSet()) {
 				ExerciseEntity exerciseEntity = new ExerciseEntity();
+				exercise.setId(null);
+				exercise.setForPlan(true);
 				copyProperties(exercise, exerciseEntity);
 				ActionEntity actionEntity = new ActionEntity();
 				copyProperties(exercise.getAction(), actionEntity);
@@ -88,6 +89,8 @@ public class PlanServiceImpl implements PlanService {
 				Set<GroupEntity> groupEntitySet = new LinkedHashSet<>();
 				for (Group group : exercise.getGroupSet()) {
 					GroupEntity groupEntity = new GroupEntity();
+					group.setId(null);
+					group.setForPlan(true);
 					copyProperties(group, groupEntity);
 					groupEntity.setExerciseEntity(exerciseEntity);
 					groupEntitySet.add(groupEntity);
@@ -101,10 +104,67 @@ public class PlanServiceImpl implements PlanService {
 			circleDayEntitySet.add(circleDayEntity);
 		}
 		planEntity.setCircleDayEntitySet(circleDayEntitySet);
-		planEntity = planRepository.saveAndFlush(planEntity);
-		entityManager.refresh(planEntity);
+		PlanEntity newPlanEntity = planRepository.saveAndFlush(planEntity);
 
-		return retrieveOne(planEntity.getId());
+		return retrieveOne(newPlanEntity.getId());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * wang.yongrui.wechat.service.PlanService#createPredefinedSet(java.util.
+	 * Set)
+	 */
+	@Override
+	public boolean createPredefinedSet(Set<Plan> planSet) {
+		if (CollectionUtils.isNotEmpty(planSet)) {
+			Set<PlanEntity> planEntitySet = new LinkedHashSet<>();
+			for (Plan plan : planSet) {
+				PlanEntity planEntity = new PlanEntity();
+				plan.setId(null);
+				plan.setPredefined(true);
+				plan.setUser(null);
+				copyProperties(plan, planEntity);
+
+				Set<CircleDayEntity> circleDayEntitySet = new LinkedHashSet<>();
+				for (CircleDay circleDay : plan.getCircleDaySet()) {
+					CircleDayEntity circleDayEntity = new CircleDayEntity();
+					circleDay.setId(null);
+					copyProperties(circleDay, circleDayEntity);
+					Set<ExerciseEntity> exerciseEntitySet = new LinkedHashSet<>();
+					for (Exercise exercise : circleDay.getExerciseSet()) {
+						ExerciseEntity exerciseEntity = new ExerciseEntity();
+						exercise.setId(null);
+						exercise.setForPlan(true);
+						copyProperties(exercise, exerciseEntity);
+						ActionEntity actionEntity = new ActionEntity();
+						copyProperties(exercise.getAction(), actionEntity);
+						exerciseEntity.setActionEntity(actionEntity);
+						Set<GroupEntity> groupEntitySet = new LinkedHashSet<>();
+						for (Group group : exercise.getGroupSet()) {
+							GroupEntity groupEntity = new GroupEntity();
+							group.setId(null);
+							group.setForPlan(true);
+							copyProperties(group, groupEntity);
+							groupEntity.setExerciseEntity(exerciseEntity);
+							groupEntitySet.add(groupEntity);
+						}
+						exerciseEntity.setGroupEntitySet(groupEntitySet);
+						exerciseEntity.setCircleDayEntity(circleDayEntity);
+						exerciseEntitySet.add(exerciseEntity);
+					}
+					circleDayEntity.setExerciseEntitySet(exerciseEntitySet);
+					circleDayEntity.setPlanEntity(planEntity);
+					circleDayEntitySet.add(circleDayEntity);
+				}
+				planEntity.setCircleDayEntitySet(circleDayEntitySet);
+				planEntitySet.add(planEntity);
+			}
+			planRepository.save(planEntitySet);
+		}
+
+		return true;
 	}
 
 	/*
@@ -153,21 +213,27 @@ public class PlanServiceImpl implements PlanService {
 					.fetch(CircleDayEntity_.exerciseEntitySet, JoinType.LEFT)
 					.fetch(ExerciseEntity_.groupEntitySet, JoinType.LEFT);
 
-			Join<PlanEntity, UserEntity> courseJoin = root.join(PlanEntity_.userEntity);
 			Predicate restrictions = criteriaBuilder.conjunction();
-			if (null != planCriteria.getUserId()) {
-				restrictions = criteriaBuilder.and(restrictions,
-						criteriaBuilder.equal(courseJoin.get(UserEntity_.id), planCriteria.getUserId()));
+			restrictions = criteriaBuilder.and(restrictions,
+					criteriaBuilder.equal(root.get(PlanEntity_.predefined), false));
+
+			if (null != planCriteria) {
+				Join<PlanEntity, UserEntity> courseJoin = root.join(PlanEntity_.userEntity);
+				if (null != planCriteria.getUserId()) {
+					restrictions = criteriaBuilder.and(restrictions,
+							criteriaBuilder.equal(courseJoin.get(UserEntity_.id), planCriteria.getUserId()));
+				}
+
+				if (null != planCriteria.getFromDate()) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder
+							.greaterThanOrEqualTo(root.get(PlanEntity_.fromDate), planCriteria.getFromDate()));
+				}
+				if (null != planCriteria.getToDate()) {
+					restrictions = criteriaBuilder.and(restrictions,
+							criteriaBuilder.lessThanOrEqualTo(root.get(PlanEntity_.toDate), planCriteria.getToDate()));
+				}
 			}
 
-			if (null != planCriteria.getFromDate()) {
-				restrictions = criteriaBuilder.and(restrictions,
-						criteriaBuilder.greaterThan(root.get(PlanEntity_.fromDate), planCriteria.getFromDate()));
-			}
-			if (null != planCriteria.getToDate()) {
-				restrictions = criteriaBuilder.and(restrictions,
-						criteriaBuilder.lessThan(root.get(PlanEntity_.toDate), planCriteria.getToDate()));
-			}
 			return restrictions;
 		}, pageable);
 
@@ -183,47 +249,102 @@ public class PlanServiceImpl implements PlanService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * wang.yongrui.wechat.service.PlanService#retrieveAllPredefinedOnes(wang.
+	 * yongrui.wechat.entity.web.criteria.PlanCriteria)
+	 */
+	@Override
+	public Set<Plan> retrieveAllPredefinedOnes(PlanCriteria planCriteria) {
+		List<PlanEntity> planEntityList = planRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
+			criteriaQuery.distinct(true);
+			root.fetch(PlanEntity_.circleDayEntitySet, JoinType.LEFT)
+					.fetch(CircleDayEntity_.exerciseEntitySet, JoinType.LEFT)
+					.fetch(ExerciseEntity_.actionEntity, JoinType.LEFT)
+					.fetch(ActionEntity_.partEntitySet, JoinType.LEFT);
+			root.fetch(PlanEntity_.circleDayEntitySet, JoinType.LEFT)
+					.fetch(CircleDayEntity_.exerciseEntitySet, JoinType.LEFT)
+					.fetch(ExerciseEntity_.groupEntitySet, JoinType.LEFT);
+
+			Predicate restrictions = criteriaBuilder.conjunction();
+			restrictions = criteriaBuilder.and(restrictions,
+					criteriaBuilder.equal(root.get(PlanEntity_.predefined), true));
+
+			if (null != planCriteria) {
+				if (null != planCriteria.getPurpose()) {
+					restrictions = criteriaBuilder.and(restrictions,
+							criteriaBuilder.equal(root.get(PlanEntity_.purpose), planCriteria.getPurpose()));
+				}
+				if (null != planCriteria.getGrade()) {
+					restrictions = criteriaBuilder.and(restrictions,
+							criteriaBuilder.equal(root.get(PlanEntity_.grade), planCriteria.getGrade()));
+				}
+				if (null != planCriteria.getFromDate()) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder
+							.greaterThanOrEqualTo(root.get(PlanEntity_.fromDate), planCriteria.getFromDate()));
+				}
+				if (null != planCriteria.getToDate()) {
+					restrictions = criteriaBuilder.and(restrictions,
+							criteriaBuilder.lessThanOrEqualTo(root.get(PlanEntity_.toDate), planCriteria.getToDate()));
+				}
+			}
+			return restrictions;
+		});
+
+		Set<Plan> planSet = new LinkedHashSet<Plan>();
+		for (PlanEntity planEntity : planEntityList) {
+			planSet.add(new Plan(planEntity));
+		}
+
+		return planSet;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * wang.yongrui.wechat.service.PlanService#putUpdate(wang.yongrui.wechat.
 	 * entity.web.Plan)
 	 */
 	@Override
 	public Plan putUpdate(Plan plan) {
-		PlanEntity planEntity = planRepository.findOne(plan.getId());
-		updateProperties(plan, planEntity, false);
-		// delete all the CircleDay and create new ones
-		planEntity.getCircleDayEntitySet().clear();
+		// PlanEntity planEntity = planRepository.findOne(plan.getId());
+		// updateProperties(plan, planEntity, false);
+		// // delete all the CircleDay and create new ones
+		// planEntity.getCircleDayEntitySet().clear();
+		//
+		// Set<CircleDayEntity> circleDayEntitySet = new LinkedHashSet<>();
+		// for (CircleDay circleDay : plan.getCircleDaySet()) {
+		// CircleDayEntity circleDayEntity = new CircleDayEntity();
+		// copyProperties(circleDay, circleDayEntity);
+		// Set<ExerciseEntity> exerciseEntitySet = new LinkedHashSet<>();
+		// for (Exercise exercise : circleDay.getExerciseSet()) {
+		// ExerciseEntity exerciseEntity = new ExerciseEntity();
+		// copyProperties(exercise, exerciseEntity);
+		// ActionEntity actionEntity = new ActionEntity();
+		// copyProperties(exercise.getAction(), actionEntity);
+		// exerciseEntity.setActionEntity(actionEntity);
+		// Set<GroupEntity> groupEntitySet = new LinkedHashSet<>();
+		// for (Group group : exercise.getGroupSet()) {
+		// GroupEntity groupEntity = new GroupEntity();
+		// copyProperties(group, groupEntity);
+		// groupEntity.setExerciseEntity(exerciseEntity);
+		// groupEntitySet.add(groupEntity);
+		// }
+		// exerciseEntity.setGroupEntitySet(groupEntitySet);
+		// exerciseEntity.setCircleDayEntity(circleDayEntity);
+		// exerciseEntitySet.add(exerciseEntity);
+		// }
+		// circleDayEntity.setExerciseEntitySet(exerciseEntitySet);
+		// circleDayEntity.setPlanEntity(planEntity);
+		// circleDayEntitySet.add(circleDayEntity);
+		// }
+		// planEntity.setCircleDayEntitySet(circleDayEntitySet);
+		// planEntity = planRepository.saveAndFlush(planEntity);
+		// entityManager.refresh(planEntity);
+		//
+		// return retrieveOne(planEntity.getId());
 
-		Set<CircleDayEntity> circleDayEntitySet = new LinkedHashSet<>();
-		for (CircleDay circleDay : plan.getCircleDaySet()) {
-			CircleDayEntity circleDayEntity = new CircleDayEntity();
-			copyProperties(circleDay, circleDayEntity);
-			Set<ExerciseEntity> exerciseEntitySet = new LinkedHashSet<>();
-			for (Exercise exercise : circleDay.getExerciseSet()) {
-				ExerciseEntity exerciseEntity = new ExerciseEntity();
-				copyProperties(exercise, exerciseEntity);
-				ActionEntity actionEntity = new ActionEntity();
-				copyProperties(exercise.getAction(), actionEntity);
-				exerciseEntity.setActionEntity(actionEntity);
-				Set<GroupEntity> groupEntitySet = new LinkedHashSet<>();
-				for (Group group : exercise.getGroupSet()) {
-					GroupEntity groupEntity = new GroupEntity();
-					copyProperties(group, groupEntity);
-					groupEntity.setExerciseEntity(exerciseEntity);
-					groupEntitySet.add(groupEntity);
-				}
-				exerciseEntity.setGroupEntitySet(groupEntitySet);
-				exerciseEntity.setCircleDayEntity(circleDayEntity);
-				exerciseEntitySet.add(exerciseEntity);
-			}
-			circleDayEntity.setExerciseEntitySet(exerciseEntitySet);
-			circleDayEntity.setPlanEntity(planEntity);
-			circleDayEntitySet.add(circleDayEntity);
-		}
-		planEntity.setCircleDayEntitySet(circleDayEntitySet);
-		planEntity = planRepository.saveAndFlush(planEntity);
-		entityManager.refresh(planEntity);
-
-		return retrieveOne(planEntity.getId());
+		planRepository.delete(plan.getId());
+		return create(plan);
 	}
 
 }
